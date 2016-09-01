@@ -8,7 +8,14 @@ var table = new Table({
 
 function execute(command, callback){
     exec(command, (error, stdout, stderr) => {
-      if (error) console.log(error);
+      if (error) {
+        console.log("abort: no repository found");
+        return;
+      }
+      if (stderr) {
+        console.log("abort: no repository found");
+        return;
+      }
       callback(stdout);
     });
 };
@@ -30,21 +37,27 @@ function addNewlines(x) {
   return result;
 }
 
-execute("hg log --limit 20", (output) => {
+var limit = 100;
+
+if (process.argv[2]) {
+  limit = process.argv[2];
+}
+
+execute("hg log --limit " + limit, (output) => {
   var content = output.split("\n").reverse();
   var regex = /([a-z]+):\s+(.*)/;
   var entries = [];
   var current = {};
   var add = false;
-  for (var entry in content) {
-    entry = content[entry];
-    if (entry === '') {
+  for (var index in content) {
+    entry = content[index];
+    if (entry === '' || index == (content.length-1)) {
       if (add) {
         entries.push(current);
         var user = (current.user || "").replace(" <", "\n<").split("\n");
         var date = (current.date || "n/a n/a n/a n/a n/a").split(" ");
         var desc = addNewlines(current.summary || "");
-        var branch = current.branch || 'default'.blue;
+        var branch = current.branch.replace("/","\n - ") || 'default'.blue;
         if (branch === "develop") branch = branch.yellow;
         if (branch.indexOf("release") !== -1) branch = branch.green;
         var e = {
