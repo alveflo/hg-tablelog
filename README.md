@@ -6,7 +6,7 @@ Table output for `hg log`. Limits to 100 entries by default.
 
 ## Install
 ```
-$ git clone <this repo>
+$ git clone https://github.com/alveflo/hg-tablelog.git
 $ cd hg-tablelog
 $ npm install
 ```
