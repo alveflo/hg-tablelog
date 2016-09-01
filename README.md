@@ -14,7 +14,7 @@ $ npm install
 Add this to your `mercurial.ini` (`~\.hgrc` if you're running unix)
 ```
 [alias]
-tlog = !powershell.exe node C:\<full path>\hg-extras\tablelog.js $1
+tlog = !powershell.exe node C:\<full path>\hg-tablelog\tablelog.js $1
 ```
 ## Usage
 ```
